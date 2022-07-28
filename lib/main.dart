@@ -30,8 +30,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int currentPageIndex = 0;
   TextEditingController inputController = TextEditingController();
+  late PageController pageController;
   bool isImage = false;
   late Book book;
 
@@ -52,6 +52,7 @@ class _MainScreenState extends State<MainScreen> {
     } else {
       book = boxBook;
     }
+    pageController = PageController(initialPage: book.latestPage);
   }
 
   @override
@@ -71,17 +72,51 @@ class _MainScreenState extends State<MainScreen> {
             icon: const Icon(Icons.add_outlined),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                book = Book(pages: [], latestPage: 0);
+              });
+              hive.box.put("book", book);
+            },
             icon: const Icon(Icons.delete_outline),
           ),
         ],
       ),
-      body: Center(
-        child: ListView.builder(
-          itemBuilder: (context, index) => Text(book.pages[index].content),
-          itemCount: book.pages.length,
-        ),
-      ),
+      body: book.pages.isEmpty
+          ? const Center(
+              child: Text("No Page created!"),
+            )
+          : PageView(
+              controller: pageController,
+              onPageChanged: (value) => setState(
+                () {
+                  book.latestPage = value;
+                },
+              ),
+              children: book.pages.map((page) {
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: page.image
+                            ? Image.network(page.content)
+                            : SingleChildScrollView(
+                                child: Text(page.content),
+                              ),
+                      ),
+                      Center(
+                        child: FloatingActionButton(
+                          onPressed: () {},
+                          child: Text(
+                              "${book.latestPage + 1}/${book.pages.length}"),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
     );
   }
 
@@ -152,7 +187,12 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
       ),
-    );
+    ).then((value) async {
+      Book newBook = await hive.box.get("book");
+      setState(() {
+        book = newBook;
+      });
+    });
   }
 
   void showCreationErrorDialog() {
