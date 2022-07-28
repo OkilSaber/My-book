@@ -1,12 +1,12 @@
 import 'package:hive/hive.dart';
-part 'page.g.dart';
+part 'book_page.g.dart';
 
 @HiveType(typeId: 0)
-class Page {
+class BookPage {
   @HiveField(0)
   String content;
   @HiveField(1)
   bool image;
 
-  Page({required this.content, required this.image});
+  BookPage({required this.content, required this.image});
 }

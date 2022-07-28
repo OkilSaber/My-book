@@ -1,29 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'page.dart';
+part of 'book_page.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PageAdapter extends TypeAdapter<Page> {
+class BookPageAdapter extends TypeAdapter<BookPage> {
   @override
   final int typeId = 0;
 
   @override
-  Page read(BinaryReader reader) {
+  BookPage read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Page(
+    return BookPage(
       content: fields[0] as String,
       image: fields[1] as bool,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Page obj) {
+  void write(BinaryWriter writer, BookPage obj) {
     writer
       ..writeByte(2)
       ..writeByte(0)
@@ -38,7 +38,7 @@ class PageAdapter extends TypeAdapter<Page> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PageAdapter &&
+      other is BookPageAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

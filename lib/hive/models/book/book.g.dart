@@ -17,7 +17,7 @@ class BookAdapter extends TypeAdapter<Book> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Book(
-      pages: (fields[0] as List).cast<Page>(),
+      pages: (fields[0] as List).cast<BookPage>(),
       latestPage: fields[1] as int,
     );
   }
