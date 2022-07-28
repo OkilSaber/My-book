@@ -62,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
         elevation: 0,
         title: const Text("My Book"),
         iconTheme: const IconThemeData(
-          color: Colors.black,
+          color: Colors.white,
         ),
         actions: [
           IconButton(
@@ -120,7 +120,10 @@ class _MainScreenState extends State<MainScreen> {
                                 });
                                 hive.box.put("book", book);
                               },
-                              child: const Icon(Icons.delete_outline_outlined),
+                              child: const Icon(
+                                Icons.delete_outline_outlined,
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
