@@ -73,12 +73,9 @@ class _MainScreenState extends State<MainScreen> {
           ),
           IconButton(
             onPressed: () {
-              setState(() {
-                book = Book(pages: [], latestPage: 0);
-              });
-              hive.box.put("book", book);
+              showDeleteAllDialog();
             },
-            icon: const Icon(Icons.delete_outline),
+            icon: const Icon(Icons.delete_forever_outlined),
           ),
         ],
       ),
@@ -106,10 +103,26 @@ class _MainScreenState extends State<MainScreen> {
                               ),
                       ),
                       Center(
-                        child: FloatingActionButton(
-                          onPressed: () {},
-                          child: Text(
-                              "${book.latestPage + 1}/${book.pages.length}"),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FloatingActionButton(
+                              onPressed: () {},
+                              child: Text(
+                                  "${book.latestPage + 1}/${book.pages.length}"),
+                            ),
+                            const SizedBox(width: 20),
+                            FloatingActionButton(
+                              onPressed: () {
+                                setState(() {
+                                  book.pages.removeAt(book.latestPage);
+                                  book.latestPage = 0;
+                                });
+                                hive.box.put("book", book);
+                              },
+                              child: const Icon(Icons.delete_outline_outlined),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -208,5 +221,34 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
+  }
+
+  void showDeleteAllDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        content: const Text("Do you really want to delete all the pages?"),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await hive.box.put("book", Book(pages: [], latestPage: 0));
+              Navigator.pop(context);
+            },
+            child: const Text("Yes"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    ).then((value) async {
+      Book newBook = await hive.box.get("book");
+      setState(() {
+        book = newBook;
+      });
+    });
   }
 }
