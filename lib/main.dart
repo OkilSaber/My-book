@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_book/hive/init.dart';
+import 'package:my_book/hive/models/book/book.dart';
 
-void main() {
+void main() async {
+  await hive.init();
   runApp(const MyBook());
 }
 
